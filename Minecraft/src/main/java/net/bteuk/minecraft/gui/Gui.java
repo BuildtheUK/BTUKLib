@@ -78,6 +78,30 @@ public abstract class Gui {
         actions.clear();
     }
 
+    /**
+     * Creates a new inventory with the new name, copies the inventory items from the old inventory to the new inventory,
+     * then opens the new inventory.
+     * @param newName The new name for the menu
+     * @param player The player to reopen the menu for after renaming, or null if you don't want to reopen the menu.
+     */
+    public void editName(Component newName, Player player) {
+        //Create new inventory with the same size but the new name
+        Inventory newInventory = Bukkit.createInventory(null, inventory.getSize(), newName);
+
+        //Copy old inventory items to new inventory
+        int iSize = inventory.getSize();
+        for (int i = 0 ; i < iSize ; i++) {
+            newInventory.setItem(i, inventory.getItem(i));
+        }
+
+        //Set the inventory of this GUI to the new inventory
+        inventory = newInventory;
+
+        //Reopen the gui
+        if (player != null)
+            this.open(player);
+    }
+
     public void open(Player player) {
         player.openInventory(inventory);
         manager.openGui(player, this);
