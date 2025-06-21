@@ -111,9 +111,8 @@ public class TextEditorBookListener implements Listener {
      * Gives the player the book, closes the current inventory and registers the listeners with the server's event listeners
      *
      * @param szBookName     The human name of the book used when notifying a player which slot the book has been added to
-     * @param protectedItems A collection of items which cannot be replaced when giving the player the book
      */
-    public void startEdit(String szBookName, Collection<ItemStack> protectedItems) {
+    public void startEdit(String szBookName) {
         //Gives the player the book item
 
         //Closes the current inventory
