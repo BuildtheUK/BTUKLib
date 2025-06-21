@@ -6,8 +6,6 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.Collection;
 import java.util.Set;
 
 /**
@@ -42,7 +40,7 @@ public class PlayerUtils {
 
         else {
             // Identifies an empty slot
-            int emptySlot = getAvailableHotbarSlot(p, protectedItems);
+            int emptySlot = getAvailableHotbarSlot(p);
 
             if (emptySlot >= 0) {
                 // Set item to empty slot.
@@ -59,10 +57,9 @@ public class PlayerUtils {
     /**
      * Cycles through the hot bar from 1 to 9, until an available spot is found
      * @param p The player to return an empty hotbar slot for
-     * @param protectedItems A collection of items which cannot be replaced
      * @return an empty hotbar slot, if no empty slot exists return -1.
      */
-    public static int getAvailableHotbarSlot(Player p, Collection<ItemStack> protectedItems) {
+    public static int getAvailableHotbarSlot(Player p) {
 
         // If main hand is empty return that slot.
         ItemStack heldItem = p.getInventory().getItemInMainHand();
