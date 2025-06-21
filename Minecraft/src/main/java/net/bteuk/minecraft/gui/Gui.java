@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -58,6 +59,17 @@ public abstract class Gui {
 
     public void setItem(int slot, ItemStack stack) {
         setItem(slot, stack, null);
+    }
+
+    /**
+     * Replaces items in this inventory with the contents of the provided inventory
+     */
+    public void setItemsFromInventory(Inventory inventory) {
+        try {
+            this.inventory.setContents(inventory.getContents());
+        }
+        catch (IllegalArgumentException e) {
+        }
     }
 
     public net.bteuk.minecraft.gui.GuiAction getAction(int slot) {
