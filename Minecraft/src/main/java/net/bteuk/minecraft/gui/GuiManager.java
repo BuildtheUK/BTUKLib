@@ -16,10 +16,6 @@ public final class GuiManager {
 
     private final Map<UUID, UUID> openGuis = new HashMap<>();
 
-    private GuiManager() {
-        // Private constructor so this class can not be instantiated.
-    }
-
     public void registerGui(Gui gui) {
         if (gui != null) {
             registeredGuis.put(gui.getUuid(), gui);
