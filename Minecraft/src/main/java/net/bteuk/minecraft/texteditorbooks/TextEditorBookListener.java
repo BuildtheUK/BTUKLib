@@ -25,7 +25,6 @@ import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.WritableBookMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
@@ -96,15 +95,15 @@ public class TextEditorBookListener implements Listener {
         bookMeta.setTitle(szBookTitle);
         bookMeta.displayName(Component.text(szBookTitle).decoration(TextDecoration.ITALIC, false));
 
-        //Stores the writable book meta for later comparison
-        editableBookData = (WritableBookMeta) this.book.getItemMeta();
-
         //Adds the initial value if it not blank
         if (initialValue.length > 0)
             bookMeta.addPages(Component.text(initialValue[0]));
 
         //Adds the meta of the book back in
         this.book.setItemMeta(bookMeta);
+
+        //Stores the writable book meta for later comparison
+        editableBookData = (WritableBookMeta) this.book.getItemMeta();
     }
 
     /**
