@@ -6,7 +6,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import java.util.Set;
+import java.util.HashSet;
 
 /**
  * A collection of static utils related to the Minecraft Player
@@ -14,7 +14,7 @@ import java.util.Set;
 public class PlayerUtils {
 
     /** A list of items which cannot be overridden when given a player an item */
-    public static Set<ItemStack> protectedItems;
+    public static HashSet<ItemStack> protectedItems = new HashSet<>();
 
     /**
      * Gives a player an item, it will be set in their main hand, if it does not already exist there.
