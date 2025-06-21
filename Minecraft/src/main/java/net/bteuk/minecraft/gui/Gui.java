@@ -23,6 +23,7 @@ public abstract class Gui {
     private Inventory inventory;
     private final Map<Integer, GuiAction> actions;
     /** The Gui manager to which this Gui belongs to */
+    @Getter
     private final GuiManager manager;
 
     @Setter
