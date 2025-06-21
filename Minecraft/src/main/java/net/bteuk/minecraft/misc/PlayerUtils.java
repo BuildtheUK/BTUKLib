@@ -8,11 +8,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Collection;
+import java.util.Set;
 
 /**
  * A collection of static utils related to the Minecraft Player
  */
 public class PlayerUtils {
+
+    /** A list of items which cannot be overridden when given a player an item */
+    public static Set<ItemStack> protectedItems;
 
     /**
      * Gives a player an item, it will be set in their main hand, if it does not already exist there.
@@ -23,9 +27,8 @@ public class PlayerUtils {
      * @param p The player to give the item to
      * @param item The item to give to the player
      * @param name The human friendly name of the item
-     * @param protectedItems A collection of items which cannot be replaced
      */
-    public static void giveItem(Player p, ItemStack item, String name, Collection<ItemStack> protectedItems) {
+    public static void giveItem(Player p, ItemStack item, String name) {
 
         // If we already have the item switch to current slot.
         if (p.getInventory().containsAtLeast(item, 1)) {

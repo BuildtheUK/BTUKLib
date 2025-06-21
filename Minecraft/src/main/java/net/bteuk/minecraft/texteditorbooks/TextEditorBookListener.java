@@ -130,7 +130,7 @@ public class TextEditorBookListener implements Listener {
         }
 
         if (!bPlayerHasItem)
-            PlayerUtils.giveItem(player, this.book, szBookName, protectedItems);
+            PlayerUtils.giveItem(player, this.book, szBookName);
 
         //Registers the book close listener
         Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
