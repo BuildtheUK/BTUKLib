@@ -22,7 +22,7 @@ public final class GuiListener implements Listener {
     /**
      * Constructs and registers the Gui listener.
      */
-    private GuiListener(GuiManager manager) {
+    public GuiListener(GuiManager manager) {
         this.guiManager = manager;
     }
 

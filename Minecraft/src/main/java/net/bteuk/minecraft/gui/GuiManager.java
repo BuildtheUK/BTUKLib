@@ -16,22 +16,30 @@ public final class GuiManager {
 
     private final Map<UUID, UUID> openGuis = new HashMap<>();
 
-    private GuiManager() {
-        // Private constructor so this class can not be instantiated.
-    }
-
+    /**
+     * Adds the Gui to the list of registered Guis.
+     * @param gui The Gui to add to the list of registered Guis.
+     */
     public void registerGui(Gui gui) {
         if (gui != null) {
             registeredGuis.put(gui.getUuid(), gui);
         }
     }
 
+    /**
+     * Removes the Gui from the list of open Guis, and removes the Gui from the list of registered Guis.
+     * @param gui Gui to unregister.
+     */
     public void unregisterGui(Gui gui) {
         if (gui != null) {
             unregisterGuiByUuid(gui.getUuid());
         }
     }
 
+    /**
+     * Removes the Gui from the list of open Guis, and removes the Gui from the list of registered Guis.
+     * @param uuid The uuid of the Gui to unregister.
+     */
     public void unregisterGuiByUuid(UUID uuid) {
         for (Player player : Bukkit.getOnlinePlayers()) {
             openGuis.remove(player.getUniqueId(), uuid);
@@ -51,11 +59,37 @@ public final class GuiManager {
         return openGuis.get(uuid);
     }
 
+    /**
+     * Opens a Gui. Registers the Gui if it is not already registered, then opens the inventory, and adds the Gui
+     * to the list of open Guis.
+     * @param player The player whom to open the Gui for.
+     * @param gui The Gui to open.
+     */
     public void openGui(Player player, Gui gui) {
+        if (!registeredGuis.containsKey(gui.getUuid()))
+            registerGui(gui);
         openGui(player.getUniqueId(), gui.getUuid());
     }
 
-    public void openGui(UUID playerUuid, UUID guiUuid) {
+    /**
+     * Opens a Gui. Registers the Gui if it is not already registered, then opens the inventory, and adds the Gui
+     * to the list of open Guis.
+     * @param playerUuid The UUID of the player whom to open the Gui for.
+     * @param gui The Gui to open.
+     */
+    public void openGui(UUID playerUuid, Gui gui) {
+        if (!registeredGuis.containsKey(gui.getUuid()))
+            registerGui(gui);
+        openGui(playerUuid, gui.getUuid());
+    }
+
+    /**
+     * Opens a Gui. Registers the Gui if it is not already registered, then opens the inventory, and adds the Gui
+     * to the list of open Guis.
+     * @param playerUuid The UUID of the player whom to open the Gui for.
+     * @param guiUuid The UUID of the Gui to open.
+     */
+    private void openGui(UUID playerUuid, UUID guiUuid) {
         openGuis.put(playerUuid, guiUuid);
     }
 
@@ -63,6 +97,10 @@ public final class GuiManager {
         closeGui(player.getUniqueId());
     }
 
+    /**
+     * Removes the Player-Gui pair from the list of open Guis for the given player
+     * @param playerUuid The player to remove the Open gui for
+     */
     public void closeGui(UUID playerUuid) {
         openGuis.remove(playerUuid);
     }
