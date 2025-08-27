@@ -14,7 +14,7 @@ import java.util.UUID;
 /**
  * Gui listener, handles player interactions with a {@link Gui}.
  */
-public class GuiListener implements Listener {
+public final class GuiListener implements Listener {
 
     /** The Gui Manager associated with this listener. */
     private GuiManager guiManager;
