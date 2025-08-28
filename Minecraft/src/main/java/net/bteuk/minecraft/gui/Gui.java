@@ -133,4 +133,8 @@ public abstract class Gui {
     public void delete() {
         manager.unregisterGuiByUuid(this.uuid);
     }
+
+    public void updatePlayerInventory(Player player) {
+        player.getOpenInventory().getTopInventory().setContents(inventory.getContents());
+    }
 }
