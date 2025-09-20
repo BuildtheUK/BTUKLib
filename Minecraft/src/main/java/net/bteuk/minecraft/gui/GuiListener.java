@@ -16,37 +16,43 @@ import java.util.UUID;
  */
 public final class GuiListener implements Listener {
 
-    private static GuiListener guiListener;
+    /** The Gui Manager associated with this listener. */
+    private GuiManager guiManager;
 
-    private GuiListener(JavaPlugin plugin) {
-        Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
+    /**
+     * Constructs and registers the Gui listener.
+     */
+    public GuiListener(GuiManager manager) {
+        this.guiManager = manager;
     }
 
     /**
-     * Register the Gui listener.
+     * Unregister the Gui listener.
      *
      * @param plugin the plugin for which the listener is registered
      */
-    public static void register(JavaPlugin plugin) {
-        if (guiListener == null) {
-            guiListener = new GuiListener(plugin);
-        }
+    public void register(JavaPlugin plugin) {
+        Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
     /**
      * Unregister the Gui listener.
      */
-    public static void unregister() {
-        HandlerList.unregisterAll(guiListener);
+    public void unregister() {
+        HandlerList.unregisterAll(this);
     }
 
+    /**
+     * Handles inventory click events. Identifies whether the click is on a Gui of the associated Gui Manager
+     * and performs necessary actions if so.
+     */
     @EventHandler
     public void onClick(InventoryClickEvent e) {
         if (e.getWhoClicked() instanceof Player player) {
-            UUID inventoryUUID = GuiManager.getOpenGuiUuidByPlayerUuid(player.getUniqueId());
+            UUID inventoryUUID = guiManager.getOpenGuiUuidByPlayerUuid(player.getUniqueId());
             if (inventoryUUID != null) {
                 e.setCancelled(true);
-                Gui gui = GuiManager.getGuiByUuid(inventoryUUID);
+                Gui gui = guiManager.getGuiByUuid(inventoryUUID);
                 GuiAction action = gui.getAction(e.getRawSlot());
 
                 if (action != null) {
@@ -56,15 +62,19 @@ public final class GuiListener implements Listener {
         }
     }
 
+    /**
+     * Handles inventory click events. Identifies whether the close is on a Gui of the associated Gui Manager
+     * and performs necessary actions if so.
+     */
     @EventHandler
     public void onClose(InventoryCloseEvent e) {
         if (e.getPlayer() instanceof Player player) {
             // Get the uuid of the open inventory, if exists.
-            UUID guiUuid = GuiManager.getOpenGuiUuidByPlayer(player);
+            UUID guiUuid = guiManager.getOpenGuiUuidByPlayer(player);
 
             if (guiUuid != null) {
                 // Get the gui.
-                Gui gui = GuiManager.getGuiByUuid(guiUuid);
+                Gui gui = guiManager.getGuiByUuid(guiUuid);
                 if (gui != null) {
                     gui.close(player);
                 }
