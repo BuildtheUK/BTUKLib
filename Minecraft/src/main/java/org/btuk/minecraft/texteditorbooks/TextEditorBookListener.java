@@ -1,8 +1,10 @@
-package net.bteuk.minecraft.texteditorbooks;
+package org.btuk.minecraft.texteditorbooks;
 
 import lombok.Getter;
-import net.bteuk.minecraft.gui.Gui;
-import net.bteuk.minecraft.misc.PlayerUtils;
+
+import org.btuk.minecraft.gui.Gui;
+import org.btuk.minecraft.misc.PlayerUtils;
+
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -90,7 +92,7 @@ public class TextEditorBookListener implements Listener {
         //Creates the book
         this.book = new ItemStack(Material.WRITABLE_BOOK, 1);
 
-        //Extracts a reference to the book meta, and sets the title and initial value
+        //Extracts a reference to the book meta and sets the title and initial value
         BookMeta bookMeta = (BookMeta) this.book.getItemMeta();
         bookMeta.setTitle(szBookTitle);
         bookMeta.displayName(Component.text(szBookTitle).decoration(TextDecoration.ITALIC, false));
@@ -106,10 +108,19 @@ public class TextEditorBookListener implements Listener {
         editableBookData = (WritableBookMeta) this.book.getItemMeta();
     }
 
+    public TextEditorBookListener(JavaPlugin plugin, Player player, ItemStack book, BookCloseAction bookCloseAction) {
+        this.plugin = plugin;
+        this.bookCloseAction = bookCloseAction;
+        this.player = player;
+        this.parentGUI = null;
+        this.book = book;
+        this.editableBookData = (WritableBookMeta) book.getItemMeta();
+    }
+
     /**
      * Gives the player the book, closes the current inventory and registers the listeners with the server's event listeners
      *
-     * @param szBookName     The human name of the book used when notifying a player which slot the book has been added to
+     * @param szBookName The human name of the book used when notifying a player which slot the book has been added to
      */
     public void startEdit(String szBookName) {
         //Gives the player the book item
@@ -143,10 +154,10 @@ public class TextEditorBookListener implements Listener {
 
     /**
      * Detects when a player closes a book after editing it, checks whether it is the relevant player and relevant book,
-     * then detects the changes and stores the information in the book.
+     * then detects the changes, and stores the information in the book.
      * <p>Will then run the custom book close logic inserted into this listener at construction</p>
      *
-     * @param event
+     * @param event book edit event
      */
     @EventHandler
     public void BookCloseEvent(PlayerEditBookEvent event) {
@@ -154,7 +165,7 @@ public class TextEditorBookListener implements Listener {
         if (!event.getPlayer().equals(player))
             return;
 
-        //Check the current item in hand for equivalence to the book of this listener
+        //Check the current item in the hand of the player for equivalence to the book of this listener
         if (!event.getPlayer().getInventory().getItemInMainHand().equals(this.book)) {
             return;
         }
@@ -185,10 +196,11 @@ public class TextEditorBookListener implements Listener {
 
         //Performs the predefined instructions upon book close, or sign
         boolean bSaveAnswers;
-        if (event.isSigning())
+        if (event.isSigning()) {
             bSaveAnswers = bookCloseAction.runBookClose(event.getPreviousBookMeta(), event.getNewBookMeta(), this, szNewContent.toString());
-        else
+        } else {
             bSaveAnswers = bookCloseAction.runBookSign(event.getPreviousBookMeta(), event.getNewBookMeta(), this, szNewContent.toString());
+        }
 
         if (bSaveAnswers) {
             //Saves the instructions in the book
@@ -214,12 +226,9 @@ public class TextEditorBookListener implements Listener {
 
                 //Closing the inv will cancel the copying/dragging process. We then want to reopen.
                 player.closeInventory();
-                Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
-                    @Override
-                    public void run() {
-                        parentGUI.open(player);
-                    }
-                }, 1);
+                if (parentGUI != null) {
+                    Bukkit.getScheduler().runTaskLater(plugin, () -> parentGUI.open(player), 1);
+                }
             }
     }
 

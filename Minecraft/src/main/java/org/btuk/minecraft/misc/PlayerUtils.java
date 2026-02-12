@@ -1,6 +1,6 @@
-package net.bteuk.minecraft.misc;
+package org.btuk.minecraft.misc;
 
-import net.bteuk.minecraft.component.ComponentUtils;
+import org.btuk.minecraft.component.ComponentUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;

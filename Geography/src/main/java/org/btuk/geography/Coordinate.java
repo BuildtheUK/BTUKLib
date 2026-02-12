@@ -1,4 +1,4 @@
-package net.bteuk.geography;
+package org.btuk.geography;
 
 public record Coordinate(double latitude, double longitude) {
 

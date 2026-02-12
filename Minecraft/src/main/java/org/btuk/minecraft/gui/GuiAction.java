@@ -1,4 +1,4 @@
-package net.bteuk.minecraft.gui;
+package org.btuk.minecraft.gui;
 
 import org.bukkit.event.inventory.InventoryClickEvent;
 

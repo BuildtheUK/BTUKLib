@@ -1,4 +1,4 @@
-package net.bteuk.minecraft.texteditorbooks;
+package org.btuk.minecraft.texteditorbooks;
 
 import org.bukkit.inventory.meta.BookMeta;
 

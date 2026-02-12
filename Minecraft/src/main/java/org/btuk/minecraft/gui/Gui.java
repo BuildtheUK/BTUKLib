@@ -1,4 +1,4 @@
-package net.bteuk.minecraft.gui;
+package org.btuk.minecraft.gui;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,7 +7,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -52,7 +51,7 @@ public abstract class Gui {
         actions = new HashMap<>();
     }
 
-    public void setItem(int slot, ItemStack stack, net.bteuk.minecraft.gui.GuiAction action) {
+    public void setItem(int slot, ItemStack stack, org.btuk.minecraft.gui.GuiAction action) {
         inventory.setItem(slot, stack);
         setAction(slot, action);
     }
@@ -72,11 +71,11 @@ public abstract class Gui {
         }
     }
 
-    public net.bteuk.minecraft.gui.GuiAction getAction(int slot) {
+    public org.btuk.minecraft.gui.GuiAction getAction(int slot) {
         return actions.get(slot);
     }
 
-    public void setAction(int slot, net.bteuk.minecraft.gui.GuiAction action) {
+    public void setAction(int slot, org.btuk.minecraft.gui.GuiAction action) {
         if (action != null) {
             actions.put(slot, action);
         }

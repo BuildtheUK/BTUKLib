@@ -1,4 +1,4 @@
-package net.bteuk.geography.geocoding;
+package org.btuk.geography.geocoding;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

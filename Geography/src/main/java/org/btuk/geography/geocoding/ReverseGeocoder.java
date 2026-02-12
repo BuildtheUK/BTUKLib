@@ -1,10 +1,10 @@
-package net.bteuk.geography.geocoding;
+package org.btuk.geography.geocoding;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import net.bteuk.geography.Coordinate;
+import org.btuk.geography.Coordinate;
 
 import java.io.BufferedReader;
 import java.io.File;
