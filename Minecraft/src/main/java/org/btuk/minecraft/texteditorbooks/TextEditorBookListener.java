@@ -69,6 +69,11 @@ public class TextEditorBookListener implements Listener {
     private final ItemStack book;
 
     /**
+     * Whether the book is allowed to be moved in the player's inventory
+     */
+    private final boolean allowInventoryMovement;
+
+    /**
      * Whether the book as been edited
      */
     @Getter
@@ -106,6 +111,8 @@ public class TextEditorBookListener implements Listener {
 
         //Stores the writable book meta for later comparison
         editableBookData = (WritableBookMeta) this.book.getItemMeta();
+
+        this.allowInventoryMovement = false;
     }
 
     public TextEditorBookListener(JavaPlugin plugin, Player player, ItemStack book, BookCloseAction bookCloseAction) {
@@ -115,6 +122,7 @@ public class TextEditorBookListener implements Listener {
         this.parentGUI = null;
         this.book = book;
         this.editableBookData = (WritableBookMeta) book.getItemMeta();
+        this.allowInventoryMovement = true;
     }
 
     /**
@@ -224,7 +232,7 @@ public class TextEditorBookListener implements Listener {
 
     @EventHandler
     public void bookTouched(InventoryClickEvent event) {
-        if (event.getCurrentItem() != null)
+        if (!allowInventoryMovement && event.getCurrentItem() != null)
             if (event.getCurrentItem().equals(this.book)) {
                 plugin.getLogger().log(Level.INFO, "Book touched, cancelling");
                 event.setCancelled(true);
@@ -239,13 +247,13 @@ public class TextEditorBookListener implements Listener {
 
     @EventHandler
     public void bookDragged(InventoryDragEvent event) {
-        if (event.getOldCursor().equals(this.book))
+        if (!allowInventoryMovement && event.getOldCursor().equals(this.book))
             event.setCancelled(true);
     }
 
     @EventHandler
     public void bookMoved(InventoryMoveItemEvent event) {
-        if (event.getItem().equals(this.book))
+        if (!allowInventoryMovement && event.getItem().equals(this.book))
             event.setCancelled(true);
     }
 
