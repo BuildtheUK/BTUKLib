@@ -145,6 +145,11 @@ public class TextEditorBookListener implements Listener {
         Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
+    public void startEdit() {
+        //Registers the book close listener
+        Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
+    }
+
     /**
      * Unregisters the listeners with the server's event listeners
      */
