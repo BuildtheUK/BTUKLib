@@ -31,11 +31,11 @@ public abstract class ReloadCommand extends Command {
 
     @Override
     public void execute(CommandSourceStack commandSourceStack, String @NonNull [] args) {
-        if (commandSourceStack.getSender() instanceof Player player && !player.hasPermission(getReloadPermission())) {
-            player.sendMessage(ComponentUtils.error("You do not have permission to use this command."));
-        }
-
         if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
+            if (commandSourceStack.getSender() instanceof Player player && !player.hasPermission(getReloadPermission())) {
+                player.sendMessage(ComponentUtils.error("You do not have permission to use this command."));
+                return;
+            }
             plugin.reload();
             commandSourceStack.getSender().sendMessage(ComponentUtils.success("The plugin configuration has been reloaded."));
             return;
