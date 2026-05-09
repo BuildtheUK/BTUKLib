@@ -4,7 +4,7 @@ import io.papermc.paper.command.brigadier.CommandSourceStack;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NonNull;
 
-import org.btuk.minecraft.component.ComponentUtils;
+import org.btuk.minecraft.misc.ComponentUtils;
 import org.btuk.minecraft.plugin.ReloadablePlugin;
 
 public abstract class ReloadCommand extends Command {
@@ -37,6 +37,12 @@ public abstract class ReloadCommand extends Command {
 
         if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
             plugin.reload();
+            commandSourceStack.getSender().sendMessage(ComponentUtils.success("The plugin configuration has been reloaded."));
+            return;
         }
+
+        handleArgs(commandSourceStack, args);
     }
+
+    protected abstract void handleArgs(CommandSourceStack commandSourceStack, String[] args);
 }

@@ -1,4 +1,4 @@
-package org.btuk.minecraft.component;
+package org.btuk.minecraft.misc;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;

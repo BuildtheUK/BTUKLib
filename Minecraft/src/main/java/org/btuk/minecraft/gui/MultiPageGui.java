@@ -4,7 +4,7 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
-import org.btuk.minecraft.component.ComponentUtils;
+import org.btuk.minecraft.misc.ComponentUtils;
 import org.btuk.minecraft.misc.ItemUtils;
 
 /**

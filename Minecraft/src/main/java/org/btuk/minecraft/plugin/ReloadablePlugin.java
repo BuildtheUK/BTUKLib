@@ -1,18 +1,20 @@
 package org.btuk.minecraft.plugin;
 
+import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import org.btuk.minecraft.commands.CommandManager;
 import org.btuk.minecraft.commands.ReloadCommand;
-import org.btuk.minecraft.config.Config;
+import org.btuk.minecraft.config.PluginConfig;
 
 public abstract class ReloadablePlugin extends JavaPlugin {
 
-    private Config config;
+    @Getter
+    private PluginConfig config;
 
     @Override
     public void onEnable() {
-        this.config = loadConfig();
+        this.config = new PluginConfig(this);
 
         CommandManager commandManager = new CommandManager(this);
         commandManager.registerCommand(getReloadCommand());
@@ -26,13 +28,6 @@ public abstract class ReloadablePlugin extends JavaPlugin {
     public void onDisable() {
         // Run any logic required before disabling the plugin.
     }
-
-    /**
-     * Loads the config from the config.yml file.
-     *
-     * @return the config instance.
-     */
-    protected abstract Config loadConfig();
 
     /**
      * Reloads the config.
