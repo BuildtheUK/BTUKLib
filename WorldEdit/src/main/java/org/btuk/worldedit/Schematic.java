@@ -2,7 +2,6 @@ package org.btuk.worldedit;
 
 import com.sk89q.worldedit.extent.clipboard.io.BuiltInClipboardFormat;
 import com.sk89q.worldedit.math.BlockVector2;
-import com.sk89q.worldedit.math.BlockVector3;
 
 import java.util.List;
 

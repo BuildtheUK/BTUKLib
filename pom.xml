@@ -10,6 +10,7 @@
         <module>Minecraft</module>
         <module>Geography</module>
         <module>WorldEdit</module>
+        <module>Outlines</module>
     </modules>
 
     <repositories>
