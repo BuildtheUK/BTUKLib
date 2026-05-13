@@ -1,9 +1,11 @@
-package org.btuk.outlines.geometry;
+package org.btuk.outlines;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
+import org.btuk.outlines.geometry.Outline;
 
 public final class Outlines {
 
@@ -22,6 +24,10 @@ public final class Outlines {
         UUID outlineId = UUID.randomUUID();
         getPlayerOutlinesMap(player).put(outlineId, outline);
         return outlineId;
+    }
+
+    public void removePlayerOutline(UUID player, UUID outlineId) {
+        getPlayerOutlinesMap(player).remove(outlineId);
     }
 
     private Map<UUID, Outline> getPlayerOutlinesMap(UUID player) {

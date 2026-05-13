@@ -45,6 +45,12 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>org.btuk.outlines</groupId>
+                <artifactId>Outlines</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>io.papermc.paper</groupId>
                 <artifactId>paper-api</artifactId>
                 <version>${paper.version}</version>

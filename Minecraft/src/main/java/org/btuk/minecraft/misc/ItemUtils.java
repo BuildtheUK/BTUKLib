@@ -2,6 +2,7 @@ package org.btuk.minecraft.misc;
 
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -26,5 +27,26 @@ public final class ItemUtils {
         item.setItemMeta(meta);
 
         return item;
+    }
+
+    /**
+     * Set the item in the selected slot of the player's inventory. If the player is holding an item, it will be replaced.
+     * If the player already has the item in their inventory, it will be moved to the selected slot.
+     *
+     * @param player the player to give the item to
+     * @param item   the item to give to the player
+     */
+    public static void setItemInSelectedSlot(Player player, ItemStack item) {
+
+        int selectedSlot = player.getInventory().getHeldItemSlot();
+
+        for (ItemStack inventoryItem : player.getInventory()) {
+            if (item.equals(inventoryItem)) {
+                player.getInventory().remove(inventoryItem);
+                return;
+            }
+        }
+
+        player.getInventory().setItem(selectedSlot, item);
     }
 }
