@@ -16,6 +16,8 @@ import com.sk89q.worldedit.regions.Polygonal2DRegion;
 import com.sk89q.worldedit.session.ClipboardHolder;
 import com.sk89q.worldedit.world.World;
 import lombok.extern.java.Log;
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.Plugin;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -32,8 +34,12 @@ import java.util.logging.Level;
 @Log
 public final class SchematicUtils {
 
-    private SchematicUtils() {
-        // Private constructor.
+    public SchematicUtils() {
+        Plugin fastAsyncWorldEdit = Bukkit.getPluginManager().getPlugin("FastAsyncWorldEdit");
+
+        if (fastAsyncWorldEdit == null || !fastAsyncWorldEdit.isEnabled()) {
+            throw new IllegalStateException("FastAsyncWorldEdit is not installed or enabled");
+        }
     }
 
     /**

@@ -21,13 +21,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.UUID;
+
 public class Selection implements Listener {
 
     private final ItemStack selectionTool;
-    private final Outlines outlines;
+    protected final Outlines outlines;
 
-    private final Map<UUID, List<IntPoint2d>> activeSelections = new HashMap<>();
-    private final Map<UUID, UUID> playerOutlineIds = new HashMap<>();
+    protected final Map<UUID, List<IntPoint2d>> activeSelections = new HashMap<>();
+    protected final Map<UUID, UUID> playerOutlineIds = new HashMap<>();
 
     public Selection(JavaPlugin plugin, ItemStack selectionTool, Outlines outlines) {
         this.selectionTool = selectionTool;
@@ -65,10 +66,10 @@ public class Selection implements Listener {
         resetSelection(event.getPlayer().getUniqueId());
     }
 
-    private void addPoint(Player player, UUID playerId, PlayerInteractEvent event) {
+    protected void addPoint(Player player, UUID playerId, PlayerInteractEvent event) {
         Location loc = event.getClickedBlock() != null ? event.getClickedBlock().getLocation() : player.getLocation();
-        int x = (int) Math.floor(loc.getX());
-        int z = (int) Math.floor(loc.getZ());
+        int x = loc.getBlockX();
+        int z = loc.getBlockZ();
 
         activeSelections.computeIfAbsent(playerId, k -> new ArrayList<>()).add(new IntPoint2d(x, z));
 
@@ -84,7 +85,7 @@ public class Selection implements Listener {
         playerOutlineIds.put(playerId, newOutlineId);
     }
 
-    private void resetSelection(UUID playerId) {
+    protected void resetSelection(UUID playerId) {
         activeSelections.remove(playerId);
         UUID outlineId = playerOutlineIds.remove(playerId);
 
