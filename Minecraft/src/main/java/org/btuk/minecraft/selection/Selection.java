@@ -4,6 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -24,7 +25,7 @@ import java.util.UUID;
 
 public class Selection implements Listener {
 
-    private final ItemStack selectionTool;
+    protected final ItemStack selectionTool;
     protected final Outlines outlines;
 
     protected final Map<UUID, List<IntPoint2d>> activeSelections = new HashMap<>();
@@ -66,23 +67,20 @@ public class Selection implements Listener {
         resetSelection(event.getPlayer().getUniqueId());
     }
 
+    @EventHandler
+    public void onWorldChange(PlayerChangedWorldEvent event) {
+        resetSelection(event.getPlayer().getUniqueId());
+    }
+
     protected void addPoint(Player player, UUID playerId, PlayerInteractEvent event) {
         Location loc = event.getClickedBlock() != null ? event.getClickedBlock().getLocation() : player.getLocation();
         int x = loc.getBlockX();
         int z = loc.getBlockZ();
 
-        activeSelections.computeIfAbsent(playerId, k -> new ArrayList<>()).add(new IntPoint2d(x, z));
+        List<IntPoint2d> points = activeSelections.computeIfAbsent(playerId, k -> new ArrayList<>());
 
-        List<IntPoint2d> points = activeSelections.get(playerId);
-        Outline newOutline = new Outline(Collections.unmodifiableList(points));
-
-        UUID oldOutlineId = playerOutlineIds.get(playerId);
-        if (oldOutlineId != null) {
-            outlines.removePlayerOutline(playerId, oldOutlineId);
-        }
-
-        UUID newOutlineId = outlines.addPlayerOutline(playerId, newOutline);
-        playerOutlineIds.put(playerId, newOutlineId);
+        points.add(new IntPoint2d(x, z));
+        replaceOutline(playerId, points);
     }
 
     protected void resetSelection(UUID playerId) {
@@ -92,5 +90,17 @@ public class Selection implements Listener {
         if (outlineId != null) {
             outlines.removePlayerOutline(playerId, outlineId);
         }
+    }
+
+    protected void replaceOutline(UUID playerId, List<IntPoint2d> points) {
+        Outline newOutline = new Outline(Collections.unmodifiableList(points));
+
+        UUID oldOutlineId = playerOutlineIds.get(playerId);
+        if (oldOutlineId != null) {
+            outlines.removePlayerOutline(playerId, oldOutlineId);
+        }
+
+        UUID newOutlineId = outlines.addPlayerOutline(playerId, newOutline);
+        playerOutlineIds.put(playerId, newOutlineId);
     }
 }

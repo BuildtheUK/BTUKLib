@@ -37,16 +37,12 @@ public final class ItemUtils {
      * @param item   the item to give to the player
      */
     public static void setItemInSelectedSlot(Player player, ItemStack item) {
-
-        int selectedSlot = player.getInventory().getHeldItemSlot();
-
         for (ItemStack inventoryItem : player.getInventory()) {
             if (item.equals(inventoryItem)) {
                 player.getInventory().remove(inventoryItem);
                 return;
             }
         }
-
-        player.getInventory().setItem(selectedSlot, item);
+        player.getInventory().setItemInMainHand(item);
     }
 }
