@@ -104,7 +104,7 @@ public class EditableSelection extends Selection {
         }
         World world = player.getWorld();
         for (IntPoint2d point : points) {
-            Location location = new Location(world, point.x(), 1 + world.getHighestBlockYAt(point.x(), point.z()), point.z());
+            Location location = new Location(world, point.x() + 0.5, 2 + world.getHighestBlockYAt(point.x(), point.z()), point.z() + 0.5);
             holograms.add(hologramManager.createHologram(location, player));
         }
         for (int i = 0; i < holograms.size(); i++) {

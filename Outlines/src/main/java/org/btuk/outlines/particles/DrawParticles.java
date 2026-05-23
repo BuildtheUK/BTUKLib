@@ -98,14 +98,13 @@ public final class DrawParticles {
     }
 
     public static void drawPoint(Player player,  World world, double playerX, double playerZ, double particleX, double particleZ) {
-        // Add 0.5 to ensure points use the block centre, rather than the corner.
-        double dx = playerX - particleX + 0.5;
-        double dz = playerZ - particleZ + 0.5;
+        double dx = playerX - particleX;
+        double dz = playerZ - particleZ;
 
         if ((dx * dx) + (dz * dz) <= PARTICLE_DRAW_RADIUS_SQUARED) {
             double y = 1.5 + world.getHighestBlockYAt((int) particleX, (int) particleZ);
 
-            player.spawnParticle(PARTICLE_TYPE, particleX, y, particleZ, 1, PARTICLE_OPTIONS);
+            player.spawnParticle(PARTICLE_TYPE, particleX + 0.5, y, particleZ + 0.5, 1, PARTICLE_OPTIONS);
         }
     }
 }

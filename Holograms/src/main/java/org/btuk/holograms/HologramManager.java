@@ -2,6 +2,7 @@ package org.btuk.holograms;
 
 import eu.decentsoftware.holograms.api.DHAPI;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
+import lombok.extern.java.Log;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -13,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+@Log
 public final class HologramManager {
 
     private final Map<UUID, Hologram> holograms = new HashMap<>();
@@ -30,6 +32,7 @@ public final class HologramManager {
 
         hologramClickListener = new HologramClickListener(this);
         Bukkit.getPluginManager().registerEvents(hologramClickListener, plugin);
+        log.info("Enabled hologram manager");
     }
 
     public void disable() {
@@ -45,6 +48,7 @@ public final class HologramManager {
         UUID uuid = createHologram(location);
         Hologram hologram = holograms.get(uuid);
         hologram.setShowPlayer(player);
+        log.info("Created hologram");
         return uuid;
     }
 
