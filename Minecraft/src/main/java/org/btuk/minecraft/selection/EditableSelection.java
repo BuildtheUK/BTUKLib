@@ -90,10 +90,7 @@ public class EditableSelection extends Selection {
 
     private void replaceHolograms(Player player) {
         UUID playerId = player.getUniqueId();
-        List<UUID> holograms = playerHolograms.get(playerId);
-        if (holograms == null) {
-            return;
-        }
+        List<UUID> holograms = playerHolograms.computeIfAbsent(playerId, k -> new ArrayList<>());
         for (UUID hologramId : holograms) {
             hologramManager.removeHologram(hologramId);
         }

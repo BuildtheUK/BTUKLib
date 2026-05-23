@@ -62,13 +62,11 @@ public class Selection implements Listener {
         if (action == Action.LEFT_CLICK_BLOCK || action == Action.LEFT_CLICK_AIR) {
             resetSelection(playerId);
             addPoint(player, playerId, event);
-            player.sendMessage(ComponentUtils.success("Started new selection."));
             return;
         }
 
         if (action == Action.RIGHT_CLICK_BLOCK || action == Action.RIGHT_CLICK_AIR) {
             addPoint(player, playerId, event);
-            player.sendMessage(ComponentUtils.success("Added point to selection."));
         }
     }
 
@@ -91,6 +89,11 @@ public class Selection implements Listener {
 
         points.add(new IntPoint2d(x, z));
         replaceOutline(playerId, points);
+        if (points.size() == 1) {
+            player.sendMessage(ComponentUtils.success("Started new selection."));
+        } else {
+            player.sendMessage(ComponentUtils.success("Added point to selection."));
+        }
     }
 
     protected void resetSelection(UUID playerId) {
