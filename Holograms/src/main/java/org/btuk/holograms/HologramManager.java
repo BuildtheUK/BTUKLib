@@ -2,7 +2,6 @@ package org.btuk.holograms;
 
 import eu.decentsoftware.holograms.api.DHAPI;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -45,7 +44,6 @@ public final class HologramManager {
     public UUID createHologram(Location location, Player player) {
         UUID uuid = createHologram(location);
         Hologram hologram = holograms.get(uuid);
-        hologram.hideAll();
         hologram.setShowPlayer(player);
         return uuid;
     }
@@ -85,6 +83,7 @@ public final class HologramManager {
         }
 
         Hologram hologram = DHAPI.createHologram(hologramId.toString(), location, Collections.singletonList("&b&lClick to move corner"));
+        hologram.setDefaultVisibleState(false);
         holograms.put(hologramId, hologram);
         return hologramId;
     }
