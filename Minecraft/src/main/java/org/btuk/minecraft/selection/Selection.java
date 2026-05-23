@@ -42,6 +42,10 @@ public class Selection implements Listener {
         ItemUtils.setItemInSelectedSlot(player, selectionTool);
     }
 
+    public List<IntPoint2d> getPlayerSelection(UUID playerId) {
+        return activeSelections.get(playerId);
+    }
+
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
