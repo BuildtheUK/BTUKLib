@@ -10,11 +10,11 @@ import org.btuk.minecraft.config.PluginConfig;
 public abstract class ReloadablePlugin extends JavaPlugin {
 
     @Getter
-    private PluginConfig config;
+    private PluginConfig pluginConfig;
 
     @Override
     public void onEnable() {
-        this.config = new PluginConfig(this);
+        this.pluginConfig = new PluginConfig(this);
 
         CommandManager commandManager = new CommandManager(this);
         commandManager.registerCommand(getReloadCommand());
@@ -33,8 +33,8 @@ public abstract class ReloadablePlugin extends JavaPlugin {
      * Reloads the config.
      */
     public void reload() {
-        if (config != null) {
-            this.config.reload();
+        if (pluginConfig != null) {
+            this.pluginConfig.reload();
         }
     }
 
