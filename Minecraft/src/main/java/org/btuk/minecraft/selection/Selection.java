@@ -52,6 +52,8 @@ public class Selection implements Listener {
             return;
         }
 
+        event.setCancelled(true);
+
         if (action == Action.LEFT_CLICK_BLOCK || action == Action.LEFT_CLICK_AIR) {
             resetSelection(playerId);
             return;
