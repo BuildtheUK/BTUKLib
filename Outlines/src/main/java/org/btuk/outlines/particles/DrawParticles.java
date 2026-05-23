@@ -1,5 +1,6 @@
 package org.btuk.outlines.particles;
 
+import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
@@ -15,6 +16,8 @@ public final class DrawParticles {
     private static final float ESTIMATED_DISTANCE_BETWEEN_PARTICLES = 0.5f;
 
     private static final Particle PARTICLE_TYPE = Particle.DUST;
+
+    private static final Particle.DustOptions PARTICLE_OPTIONS = new Particle.DustOptions(Color.RED, 1.0f);
 
     public static void drawOutline(Player player, Outline outline) {
         var points = outline.points();
@@ -99,7 +102,7 @@ public final class DrawParticles {
         if ((dx * dx) + (dz * dz) <= PARTICLE_DRAW_RADIUS_SQUARED) {
             int y = 1 + world.getHighestBlockYAt((int) particleX, (int) particleZ);
 
-            player.spawnParticle(PARTICLE_TYPE, particleX, y, particleZ, 1);
+            player.spawnParticle(PARTICLE_TYPE, particleX, y, particleZ, 1, PARTICLE_OPTIONS);
         }
     }
 }
