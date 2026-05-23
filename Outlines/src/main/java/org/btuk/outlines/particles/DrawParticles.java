@@ -100,7 +100,7 @@ public final class DrawParticles {
         double dz = playerZ - particleZ;
 
         if ((dx * dx) + (dz * dz) <= PARTICLE_DRAW_RADIUS_SQUARED) {
-            int y = 1 + world.getHighestBlockYAt((int) particleX, (int) particleZ);
+            double y = 1.5 + world.getHighestBlockYAt((int) particleX, (int) particleZ);
 
             player.spawnParticle(PARTICLE_TYPE, particleX, y, particleZ, 1, PARTICLE_OPTIONS);
         }

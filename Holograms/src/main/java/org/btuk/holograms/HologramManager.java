@@ -2,12 +2,14 @@ package org.btuk.holograms;
 
 import eu.decentsoftware.holograms.api.DHAPI;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -82,7 +84,7 @@ public final class HologramManager {
             throw new IllegalStateException("Hologram with ID " + hologramId + " already exists");
         }
 
-        Hologram hologram = DHAPI.createHologram(hologramId.toString(), location);
+        Hologram hologram = DHAPI.createHologram(hologramId.toString(), location, Collections.singletonList("&b&lClick to move corner"));
         holograms.put(hologramId, hologram);
         return hologramId;
     }

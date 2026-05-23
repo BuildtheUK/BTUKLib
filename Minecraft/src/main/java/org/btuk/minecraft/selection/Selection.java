@@ -11,6 +11,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import org.btuk.minecraft.misc.ComponentUtils;
 import org.btuk.minecraft.misc.ItemUtils;
 import org.btuk.outlines.Outlines;
 import org.btuk.outlines.geometry.Outline;
@@ -60,11 +61,14 @@ public class Selection implements Listener {
 
         if (action == Action.LEFT_CLICK_BLOCK || action == Action.LEFT_CLICK_AIR) {
             resetSelection(playerId);
+            addPoint(player, playerId, event);
+            player.sendMessage(ComponentUtils.success("Started new selection."));
             return;
         }
 
         if (action == Action.RIGHT_CLICK_BLOCK || action == Action.RIGHT_CLICK_AIR) {
             addPoint(player, playerId, event);
+            player.sendMessage(ComponentUtils.success("Added point to selection."));
         }
     }
 
