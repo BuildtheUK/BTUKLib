@@ -1,0 +1,2345 @@
+openapi: 3.0.3
+info:
+  title: BTUK Backend API
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/api
+security:
+  - BearerAuth: [ ]
+paths:
+  /auth/user/token:
+    post:
+      tags:
+        - Authentication
+      operationId: issueUserToken
+      summary: Obtain JWT token for user
+      security: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Token issued
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /auth/client/token:
+    post:
+      tags:
+        - Authentication
+      operationId: issueClientToken
+      summary: Obtain JWT token for client
+      security: [ ]
+      parameters:
+        - in: header
+          name: X-API-CLIENT-ID
+          schema:
+            type: string
+            format: uuid
+          required: true
+        - in: header
+          name: X-API-KEY-ID
+          schema:
+            type: string
+            format: uuid
+          required: true
+        - in: header
+          name: X-API-KEY
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Token issued
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+
+  /admin/clients/create:
+    post:
+      tags:
+        - AdminClient
+      operationId: createClient
+      summary: Create a new client
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateClientRequest'
+      responses:
+        '200':
+          description: Client created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateClientResponse'
+  /admin/clients/{clientId}/keys/create:
+    post:
+      tags:
+        - AdminClient
+      operationId: createKey
+      summary: Create new key for a client
+      parameters:
+        - in: path
+          name: clientId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateKeyRequest'
+      responses:
+        '200':
+          description: Key created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateKeyResponse'
+  /admin/clients/{clientId}/keys/{keyId}/revoke:
+    post:
+      tags:
+        - AdminClient
+      operationId: revokeKey
+      summary: Revokes a key for a client
+      parameters:
+        - in: path
+          name: clientId
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: keyId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Key revoked
+  /admin/clients/{clientId}/update:
+    patch:
+      tags:
+        - AdminClient
+      operationId: updateClient
+      summary: Update a client
+      parameters:
+        - in: path
+          name: clientId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateClientRequest'
+      responses:
+        '200':
+          description: Client updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateClientResponse'
+  /admin/clients/{clientId}/disable:
+    delete:
+      tags:
+        - AdminClient
+      operationId: disableClient
+      summary: Disables a client
+      parameters:
+        - in: path
+          name: clientId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Client disabled
+  /admin/clients:
+    get:
+      tags:
+        - AdminClient
+      operationId: getClients
+      summary: List all clients
+      responses:
+        '200':
+          description: List of clients
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListClientsResponse'
+
+  /team/create:
+    post:
+      tags:
+        - Teams
+      operationId: createTeam
+      summary: Create a team
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTeamRequest'
+      responses:
+        '200':
+          description: Team created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateTeamResponse'
+        '400':
+          description: Team already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /team/delete:
+    delete:
+      tags:
+        - Teams
+      operationId: deleteTeam
+      summary: Delete a team
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteTeamRequest'
+      responses:
+        '200':
+          description: Team deleted
+        '404':
+          description: Team not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Team has regions linked to it, unable to remove.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /team/create/region:
+    post:
+      tags:
+        - Teams
+      operationId: createTeamRegion
+      summary: Create a team region
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTeamRegionRequest'
+      responses:
+        '200':
+          description: Team region created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateTeamRegionResponse'
+  /team/delete/region:
+    delete:
+      tags:
+        - Teams
+      operationId: deleteTeamRegion
+      summary: Delete a team region
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteTeamRegionRequest'
+      responses:
+        '200':
+          description: Team region deleted
+        '404':
+          description: Team region not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /team/switch/region:
+    patch:
+      tags:
+        - Teams
+      operationId: switchTeamRegion
+      summary: Switches a team region to another team
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SwitchTeamRegionRequest'
+      responses:
+        '200':
+          description: Team region switch to another team
+        '404':
+          description: Team or team region not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /team/{teamId}/regions:
+    get:
+      tags:
+        - Teams
+      operationId: getTeamRegions
+      summary: Gets all regions for a team
+      parameters:
+        - in: path
+          name: teamId
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: List of regions for a team
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TeamRegion'
+        '204':
+          description: Team has no regions
+        '404':
+          description: Team not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /team/{teamId}/servers:
+    get:
+      tags:
+        - Teams
+      operationId: getTeamServers
+      summary: Gets all servers for a team
+      parameters:
+        - in: path
+          name: teamId
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: List of servers for a team
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Server'
+        '204':
+          description: Team has no servers
+        '404':
+          description: Team not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /teams:
+    get:
+      tags:
+        - Teams
+      operationId: listTeams
+      summary: List all teams
+      responses:
+        '200':
+          description: List of teams
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Team'
+        '204':
+          description: There are no teams
+
+  /server/create:
+    post:
+      tags:
+        - Servers
+      operationId: createServer
+      summary: Create a server for a team
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateServerRequest'
+      responses:
+        '200':
+          description: Server created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateServerResponse'
+        '400':
+          description: Server already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: User not authorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /server/delete:
+    delete:
+      tags:
+        - Servers
+      operationId: deleteServer
+      summary: Delete a server
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteServerRequest'
+      responses:
+        '200':
+          description: Server deleted
+        '403':
+          description: User not authorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Server not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Server has regions linked to it, unable to remove.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /server/switch:
+    patch:
+      tags:
+        - Servers
+      operationId: switchServer
+      summary: Switches a server to another team
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SwitchServerRequest'
+      responses:
+        '200':
+          description: Server switched to another team
+        '403':
+          description: User not authorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Server or team not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /server/create/region:
+    post:
+      tags:
+        - Servers
+      operationId: createServerRegion
+      summary: Create a region for a server
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateServerRegionRequest'
+      responses:
+        '200':
+          description: Server region created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateServerRegionResponse'
+        '403':
+          description: User not authorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /server/delete/region:
+    delete:
+      tags:
+        - Servers
+      operationId: deleteServerRegion
+      summary: Delete a region for a server
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteServerRegionRequest'
+      responses:
+        '200':
+          description: Server region deleted
+        '403':
+          description: User not authorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Server region not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /server/switch/region:
+    patch:
+      tags:
+        - Servers
+      operationId: switchServerRegion
+      summary: Switch the server for a server region
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SwitchServerRegionRequest'
+      responses:
+        '200':
+          description: Server region switched to another server
+        '403':
+          description: User not authorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Server or region not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /server/{serverId}/regions:
+    get:
+      tags:
+        - Servers
+      operationId: getServerRegions
+      summary: Get all server regions for a server
+      parameters:
+        - in: path
+          name: serverId
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: List of regions for a server
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ServerRegion'
+        '204':
+          description: Server has no regions
+        '404':
+          description: Server not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /regions:
+    get:
+      tags:
+        - Regions
+      operationId: getRegions
+      summary: List regions
+      parameters:
+        - in: query
+          name: status
+          schema:
+            $ref: "#/components/schemas/RegionStatus"
+          description: Optional status filter (e.g., CLAIMED)
+      responses:
+        '200':
+          description: Regions list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Region'
+  /region/summary/{id}:
+    get:
+      tags:
+        - Regions
+      operationId: getRegionByID
+      summary: Get region by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Region
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Region'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /region/claim:
+    post:
+      tags:
+        - Claims
+      operationId: createClaim
+      summary: Puts in a request to create a claim
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegionClaimRequest'
+      responses:
+        '200':
+          description: Request processed successfully. See response body.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegionClaimResponse'
+        '500':
+          description: Internal service error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /region/approvals/recalculate/{id}:
+    post:
+      tags:
+        - Approvals
+      operationId: recalculateValidityAndApprovals
+      summary: Recalculates the validity and approval requirements of an In_Approval claim
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Recalculation occurred. See response body.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecalculateValidityResponse'
+        '500':
+          description: Internal service error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /region/approvals/getReviewerApprovals:
+    get:
+      tags:
+        - Approvals
+      operationId: getReviewerApprovals
+      summary: Gets a list of claims requiring approval from reviewers
+      responses:
+        '200':
+          description: List of reviewer approvals
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    regionId:
+                      type: integer
+                      format: int32
+                    approval_reasons:
+                      type: object
+                      properties:
+                        CLAIM_AREA:
+                          type: boolean
+                        TOTAL_CLAIMED_AREA:
+                          type: boolean
+                        INACTIVE_OVERLAP:
+                          type: boolean
+                        SECTION_SAVE_OVERLAP:
+                          type: boolean
+                      required:
+                        - CLAIM_AREA
+                        - TOTAL_CLAIMED_AREA
+                        - INACTIVE_OVERLAP
+                        - SECTION_SAVE_OVERLAP
+                    area:
+                      type: number
+                      format: double
+                    created_at:
+                      type: string
+                      format: date-time
+                    region_owner:
+                      type: string
+                  required:
+                    - regionId
+                    - approval_reasons
+                    - area
+                    - created_at
+                    - region_owner
+        '500':
+          description: Internal service error.
+          content:
+            application/json:
+              schema:
+                type: string
+  /region/approvals/getPlayerApprovals:
+    get:
+      tags:
+        - Approvals
+      operationId: getPlayerApprovals
+      summary: Gets a list of claims requiring approval from a player
+      parameters:
+        - in: query
+          name: uuid
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of player approvals
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    regionId:
+                      type: integer
+                      format: int32
+                    saveId:
+                      type: integer
+                      format: int32
+                    region_owner:
+                      type: string
+                  required:
+                    - regionId
+                    - saveId
+                    - region_owner
+        '500':
+          description: Internal service error.
+          content:
+            application/json:
+              schema:
+                type: string
+  /region/approvals/reviewerApprove:
+    post:
+      tags:
+        - Approvals
+      operationId: approveRegion
+      summary: Reviewer approves or rejects a region
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                regionId:
+                  type: integer
+                  format: int32
+                approve:
+                  type: boolean
+              required:
+                - regionId
+                - approve
+      responses:
+        '200':
+          description: Approval decision recorded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+  /region/approvals/overclaimApprove:
+    post:
+      tags:
+        - Approvals
+      operationId: approveOverclaim
+      summary: Player approves or rejects an overclaim
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                regionId:
+                  type: integer
+                  format: int32
+                saveId:
+                  type: integer
+                  format: int32
+                approve:
+                  type: boolean
+              required:
+                - regionId
+                - saveId
+                - approve
+      responses:
+        '200':
+          description: Overclaim approval decision recorded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+  /region/inactivity:
+    get:
+      tags:
+        - Inactivity
+      operationId: getInactiveRegions
+      summary: Returns a list of claimed regions which have little inactive
+      parameters:
+        - in: query
+          name: teamID
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Request processed successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/InactiveRegion'
+        '500':
+          description: Internal service error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /region/inactivity/sleep/{id}:
+    post:
+      tags:
+        - Inactivity
+      operationId: sleepRegion
+      summary: Marks a region as sleeping
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Region asleep
+        404:
+          description: Region not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /region/inactivity/kill/{id}:
+    post:
+      tags:
+        - Inactivity
+      operationId: killRegion
+      summary: Archives and removes the progress and marks the region as dead.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Region killed
+        404:
+          description: Region not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /region/inactivity/awake/{id}:
+    post:
+      tags:
+        - Inactivity
+      operationId: awakeRegion
+      summary: Marks a sleeping region as claimed.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Region awake
+        404:
+          description: Region not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /region/claimPlot:
+    post:
+      tags:
+        - Plots
+      operationId: claimPlot
+      summary: Player claims an existing plot
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                uuid:
+                  type: string
+                regionId:
+                  type: integer
+                  format: int32
+              required:
+                - uuid
+                - regionId
+      responses:
+        '200':
+          description: Request processed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegionClaimResponse'
+  /region/createPlot:
+    post:
+      tags:
+        - Plots
+      operationId: createPlot
+      summary: Architect creates a plot
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                uuid:
+                  type: string
+                teamId:
+                  type: integer
+                  format: int32
+                geometry_bounds:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Coordinate'
+                  minItems: 4
+              required:
+                - uuid
+                - teamId
+                - geometry_bounds
+      responses:
+        '200':
+          description: Plot created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegionClaimResponse'
+  /region/archive:
+    post:
+      tags:
+        - Regions
+      operationId: archiveRegion
+      summary: Creates an archive of a region
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                regionId:
+                  type: integer
+                  format: int32
+                saveId:
+                  type: integer
+                  format: int32
+                archiveType:
+                  type: string
+                  enum: [INITIAL, REVIEWER_KILLED, OVERCLAIMED_KILLED, DELETION, SAVE]
+                minecraftVersion:
+                  type: string
+                schematic:
+                  type: string
+                  format: binary
+              required:
+                - regionId
+                - archiveType
+                - minecraftVersion
+                - schematic
+      responses:
+        '201':
+          description: Archive created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  archiveId:
+                    type: integer
+                  filePath:
+                    type: string
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Region not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /region/delete:
+    post:
+      tags:
+        - Regions
+      operationId: deleteRegion
+      summary: Player deletes a region
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                regionId:
+                  type: integer
+                  format: int32
+                archive:
+                  type: boolean
+              required:
+                - regionId
+      responses:
+        '200':
+          description: Region deleted (status set to DELETED)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+  /region/abandonPlot:
+    post:
+      tags:
+        - Plots
+      operationId: abandonPlot
+      summary: Player abandons a plot
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                regionId:
+                  type: integer
+                  format: int32
+              required:
+                - regionId
+      responses:
+        '200':
+          description: Plot abandoned
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+  /membership/add:
+    post:
+      tags:
+        - Membership
+      operationId: AddMember
+      summary: Adds a player as a member to a region
+      parameters:
+        - in: query
+          name: region
+          description: The ID of the region to join
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - in: query
+          name: player
+          description: The UUID of the player to join
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Processed Successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericRequestResponse'
+        404:
+          description: Region not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /membership/remove:
+    post:
+      tags:
+        - Membership
+      operationId: RemoveMember
+      summary: Removes a player as a member from a region
+      parameters:
+        - in: query
+          name: region
+          description: The ID of the region to remove the player from
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - in: query
+          name: player
+          description: The UUID of the player to remove
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Processed Successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericRequestResponse'
+  /membership/invite:
+    post:
+      tags:
+        - Membership
+      operationId: InviteMember
+      summary: Puts in an invite for a player to join a region
+      parameters:
+        - in: query
+          name: region
+          description: The ID of the region to join
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - in: query
+          name: player
+          description: The UUID of the player to join
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Processed Successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericRequestResponse'
+        404:
+          description: Region not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /membership/request:
+    post:
+      tags:
+        - Membership
+      operationId: RequestMembership
+      summary: Puts in a request for a player to join a region
+      parameters:
+        - in: query
+          name: region
+          description: The ID of the region to join
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - in: query
+          name: player
+          description: The UUID of the player to join
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Processed Successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericRequestResponse'
+        404:
+          description: Region not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /membership/invite/accept:
+    post:
+      tags:
+        - Membership
+      operationId: AcceptInvite
+      summary: Accepts an invitation to join a region
+      parameters:
+        - in: query
+          name: region
+          description: The ID of the region to join
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - in: query
+          name: player
+          description: The UUID of the player to join
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Processed Successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericRequestResponse'
+  /membership/invite/decline:
+    delete:
+      tags:
+        - Membership
+      operationId: DeclineInvite
+      summary: Declines an invitation to join a region
+      parameters:
+        - in: query
+          name: region
+          description: The ID of the region to decline
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - in: query
+          name: player
+          description: The UUID of the player declining
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Processed Successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericRequestResponse'
+  /membership/invite/retract:
+    delete:
+      tags:
+        - Membership
+      operationId: RetractInvite
+      summary: Retracts an invitation to join a region
+      parameters:
+        - in: query
+          name: region
+          description: The ID of the region to retract the invitation of
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - in: query
+          name: player
+          description: The UUID of the player to retract the invitation from
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Processed Successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericRequestResponse'
+  /membership/request/accept:
+    post:
+      tags:
+        - Membership
+      operationId: AcceptRequest
+      summary: Accepts a request to join a region
+      parameters:
+        - in: query
+          name: region
+          description: The ID of the region to accept the join request for
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - in: query
+          name: player
+          description: The UUID of the player to accept the join request of
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Processed Successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericRequestResponse'
+  /membership/request/reject:
+    delete:
+      tags:
+        - Membership
+      operationId: RejectRequest
+      summary: Reject a request to join a region
+      parameters:
+        - in: query
+          name: region
+          description: The ID of the region to reject the join request for
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - in: query
+          name: player
+          description: The UUID of the player to reject the join request of
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Processed Successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericRequestResponse'
+  /membership/request/withdraw:
+    delete:
+      tags:
+        - Membership
+      operationId: WithdrawRequest
+      summary: Withdraws a request to join a region
+      parameters:
+        - in: query
+          name: region
+          description: The ID of the region to withdraw the join request for
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - in: query
+          name: player
+          description: The UUID of the player to withdraw the join request of
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Processed Successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericRequestResponse'
+  /membership/invite/sent:
+    get:
+      tags:
+        - Membership
+      operationId: GetSentInvites
+      summary: Gets the list of join invites an owner has sent
+      parameters:
+        - in: query
+          name: player
+          description: The UUID of the player to get the sent invites of
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Processed Successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MembershipRequest'
+  /membership/invite/received:
+    get:
+      tags:
+        - Membership
+      operationId: GetReceivedInvites
+      summary: Gets the list of join invites received
+      parameters:
+        - in: query
+          name: player
+          description: The UUID of the player to get the received invitations of
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Processed Successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MembershipRequest'
+  /membership/request/sent:
+    get:
+      tags:
+        - Membership
+      operationId: GetSentRequests
+      summary: Gets the list of regions a player has requested to join
+      parameters:
+        - in: query
+          name: player
+          description: The UUID of the player to get the sent requests of
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Processed Successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MembershipRequest'
+  /membership/request/received:
+    get:
+      tags:
+        - Membership
+      operationId: GetReceivedRequests
+      summary: Gets the list of requests which the player has received
+      parameters:
+        - in: query
+          name: player
+          description: The UUID of the player to get the received requests of
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Processed Successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MembershipRequest'
+  /membership/transferownership:
+    post:
+      tags:
+        - Membership
+      operationId: transferOwnship
+      summary: Transfers the ownership of a region
+      parameters:
+        - in: query
+          name: region
+          description: The ID of the region to transfer the ownership of
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - in: query
+          name: player
+          description: The UUID of the player to give ownership to
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Processed Successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericRequestResponse'
+  /membership/activity/update:
+    patch:
+      tags:
+        - Membership
+      operationId: updateActivity
+      summary: Updates the last_active time of a member in a region
+      parameters:
+        - in: query
+          name: region
+          description: The ID of the region to update activity of
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - in: query
+          name: player
+          description: The UUID of the player to update the activity of
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Processed Successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericRequestResponse'
+        404:
+          description: Region not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /membership/ismember:
+    get:
+      tags:
+        - Membership
+      operationId: IsMember
+      summary: Returns whether the player is an owner or member of the given region
+      parameters:
+        - in: query
+          name: region
+          description: The ID of the region to check membership of the given player
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - in: query
+          name: player
+          description: The UUID of the player for whom to check membership of the given region
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Processed Successfully
+          content:
+            application/json:
+              schema:
+                type: boolean
+  /membership/isowner:
+    get:
+      tags:
+        - Membership
+      operationId: IsOwner
+      summary: Returns whether the player is an owner of the given region
+      parameters:
+        - in: query
+          name: region
+          description: The ID of the region to check ownership of the given player
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - in: query
+          name: player
+          description: The UUID of the player for whom to check ownership of the given region
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Processed Successfully
+          content:
+            application/json:
+              schema:
+                type: boolean
+  /submission/submit:
+    post:
+      tags:
+        - Submission
+      operationId: submitSection
+      summary: Player submits a section for review
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubmitSectionRequest'
+      responses:
+        200:
+          description: Section submitted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubmitSectionResponse'
+        400:
+          description: Section submission failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubmitSectionResponse'
+  /submission/resubmit:
+    patch:
+      tags:
+        - Submission
+      operationId: resubmit
+      summary: Resubmit a submission after feedback or retracting it
+      parameters:
+        - in: query
+          name: id
+          description: The ID of the submission to resubmit
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        200:
+          description: Section resubmitted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubmitSectionResponse'
+        400:
+          description: Section save not valid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubmitSectionResponse'
+  /submission/fetchbyuser:
+    get:
+      tags:
+        - Submission
+      operationId: fetchByUser
+      summary: Fetch the submissions of a user which are not rejected or approved
+      parameters:
+        - in: query
+          name: user
+          description: The user to fetch the submissions for
+          required: true
+          schema:
+            $ref: '#/components/schemas/TeamUser'
+      responses:
+        200:
+          description: Request processed successfully, see response body
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                    $ref: '#/components/schemas/UserSubmission'
+  /submission/retract:
+    patch:
+      tags:
+        - Submission
+      operationId: retract
+      summary: Retracts a submission in Submitted status
+      parameters:
+        - in: query
+          name: id
+          description: The ID of the submission to retract
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        200:
+          description: Section retracted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        400:
+          description: Section save not valid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: "JWT Bearer token. Use the Authorize button and paste: Bearer <token>"
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        errorCode:
+          type: string
+          enum:
+            - USER_NOT_AUTHORIZED
+            - INVALID_CREDENTIALS
+            - TEAM_NOT_FOUND
+            - TEAM_ALREADY_EXISTS
+            - TEAM_HAS_REGIONS
+            - TEAM_REFERENCED_BY_ENTITIES
+            - INCORRECT_TEAM
+            - TEAM_REGION_NOT_FOUND
+            - TEAM_REGION_CONFLICT
+            - TEAM_REGION_ALREADY_EXISTS
+            - SERVER_NOT_FOUND
+            - SERVER_ALREADY_EXISTS
+            - SERVER_HAS_REGIONS
+            - SERVER_REFERENCED_BY_ENTITIES
+            - SERVER_REGION_NOT_FOUND
+            - SERVER_REGION_CONFLICT
+            - SERVER_REGION_ALREADY_EXISTS
+            - NOT_CONTAINED_BY_TEAM_REGION
+            - REGION_NOT_FOUND
+            - SECTION_SAVE_NOT_FOUND
+            - SECTION_SAVE_NOT_VALID_STATUS
+            - SUBMISSION_NOT_FOUND
+            - SUBMISSION_NOT_SUBMITTED
+            - INTERNAL_SERVER_ERROR
+            - REGION_NOT_ASLEEP
+            - REGION_NOT_CLAIMED
+          description: A standardized error code for client-side localization
+        parameters:
+          type: array
+          items:
+            type: string
+          description: Parameters to add to the client-side error message
+      required:
+        - errorCode
+
+    LoginRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+      required:
+        - username
+        - password
+    TokenResponse:
+      type: object
+      properties:
+        token:
+          type: string
+        expiresAtEpochSeconds:
+          type: integer
+          format: int64
+    Region:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        status:
+          $ref: "#/components/schemas/RegionStatus"
+        tag:
+          type: string
+        description:
+          type: string
+    RegionStatus:
+      type: string
+      enum:
+        - READY
+        - IN_APPROVAL
+        - REJECTED
+        - CLAIMED
+        - SUBMITTED
+        - ACCEPTED
+        - DELETED
+    CreateClientRequest:
+      type: object
+      properties:
+        teamName:
+          type: string
+        allowedCidrs:
+          type: string
+      required:
+        - teamName
+    CreateClientResponse:
+      type: object
+      properties:
+        clientId:
+          type: string
+      required:
+        - clientId
+    CreateKeyRequest:
+      type: object
+      properties:
+        expiresAtEpochSeconds:
+          type: integer
+          format: int64
+    CreateKeyResponse:
+      type: object
+      properties:
+        clientId:
+          type: string
+        keyId:
+          type: string
+        secret:
+          type: string
+      required:
+        - clientId
+        - keyId
+        - secret
+    UpdateClientRequest:
+      type: object
+      properties:
+        status:
+          type: string
+        allowedCidrs:
+          type: string
+    UpdateClientResponse:
+      type: object
+      properties:
+        clientId:
+          type: string
+        name:
+          type: string
+        status:
+          type: string
+        allowedCidrs:
+          type: string
+      required:
+        - clientId
+        - name
+        - status
+        - allowedCidrs
+    ListClientsResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/Client'
+    Client:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        status:
+          type: string
+        allowedCidrs:
+          type: string
+        lastSeenAt:
+          type: integer
+          format: int64
+    RegionClaimRequest:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/TeamUser'
+        geometry_bounds:
+          type: array
+          items:
+            $ref: '#/components/schemas/Coordinate'
+          minItems: 4
+      required:
+        - uuid
+        - teamId
+        - geometry_bounds
+
+    RegionClaimResponse:
+      type: object
+      properties:
+        result:
+          $ref: '#/components/schemas/ClaimResult'
+      required:
+        - result
+
+    RecalculateValidityResponse:
+      type: object
+      properties:
+        result:
+          $ref: '#/components/schemas/ClaimResult'
+        approval_requirements_changed:
+          type: boolean
+      required:
+        - result
+
+    ClaimResult:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - REJECTED
+            - GONE_FOR_APPROVAL
+            - CREATED
+        reject_details:
+          type: string
+          enum:
+            - CANNOT_FIND_REGION
+            - REGION_NOT_IN_APPROVAL
+            - REGION_HAS_NO_OWNER
+            - ZONE_FETCH_ERROR
+            - POLYGAMOUS_ZONE_RELATIONSHIP
+            - UNACCEPTABLE_ZONE_RELATIONSHIP
+            - PLOT_ZONE_CONTROLS
+            - UNACCEPTABLE_REGION_OVERLAP
+            - ACTIVE_REGION_OVERLAP
+            - APPROVAL_CATEGORY_FAILED
+        region_id:
+          type: integer
+          format: int32
+        approvals:
+          type: array
+          items:
+            $ref: '#/components/schemas/Approval'
+      required:
+        - result_type
+
+    Coordinate:
+      type: object
+      properties:
+        latitude:
+          type: number
+          format: double
+          description: Latitude
+          minimum: -90
+          maximum: 90
+        longitude:
+          type: number
+          format: double
+          description: Longitude
+          minimum: -180
+          maximum: 180
+      required:
+        - latitude
+        - longitude
+
+    ApprovalType:
+      type: string
+      enum:
+        - CLAIM_AREA
+        - TOTAL_CLAIMED_AREA
+        - INACTIVE_OVERLAP
+        - SECTION_SAVE_OVERLAP
+    ApprovalStatus:
+      type: string
+      enum:
+        - REQUIRE_APPROVAL
+        - FAIL
+    Approval:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/ApprovalType'
+        status:
+          $ref: '#/components/schemas/ApprovalStatus'
+      required:
+        - type
+        - status
+
+    CreateTeamRequest:
+      type: object
+      properties:
+        name:
+          type: string
+      required:
+        - name
+    CreateTeamResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+      required:
+        - id
+    DeleteTeamRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+      required:
+        - id
+    Team:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+      required:
+        - id
+        - name
+    CreateTeamRegionRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        teamId:
+          type: integer
+          format: int32
+        geometry_bounds:
+          type: array
+          items:
+            $ref: '#/components/schemas/Coordinate'
+          minItems: 4
+      required:
+        - name
+        - teamId
+        - geometry_bounds
+    CreateTeamRegionResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+      required:
+        - id
+    DeleteTeamRegionRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+      required:
+        - id
+    SwitchTeamRegionRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        newTeamId:
+          type: integer
+          format: int32
+      required:
+        - id
+        - newTeamId
+    TeamRegion:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+        geometry_bounds:
+          type: array
+          items:
+            $ref: '#/components/schemas/Coordinate'
+          minItems: 4
+      required:
+        - id
+        - name
+        - geometry_bounds
+    Server:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+      required:
+        - id
+        - name
+    ServerRegion:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+        geometry_bounds:
+          type: array
+          items:
+            $ref: '#/components/schemas/Coordinate'
+          minItems: 4
+      required:
+        - id
+        - name
+        - geometry_bounds
+    CreateServerRequest:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/TeamUser'
+        name:
+          type: string
+      required:
+        - user
+        - name
+    CreateServerResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+      required:
+        - id
+    DeleteServerRequest:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/TeamUser'
+        id:
+          type: integer
+          format: int32
+      required:
+        - user
+        - id
+    SwitchServerRequest:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/TeamUser'
+        id:
+          type: integer
+          format: int32
+        newTeamId:
+          type: integer
+          format: int32
+      required:
+        - user
+        - id
+        - newTeamId
+    CreateServerRegionRequest:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/TeamUser'
+        name:
+          type: string
+        serverId:
+          type: integer
+          format: int32
+        geometry_bounds:
+          type: array
+          items:
+            $ref: '#/components/schemas/Coordinate'
+          minItems: 4
+      required:
+        - user
+        - name
+        - serverId
+        - geometry_bounds
+    CreateServerRegionResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+      required:
+        - id
+    DeleteServerRegionRequest:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/TeamUser'
+        id:
+          type: integer
+          format: int32
+      required:
+        - user
+        - id
+    SwitchServerRegionRequest:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/TeamUser'
+        id:
+          type: integer
+          format: int32
+        newServerId:
+          type: integer
+          format: int32
+      required:
+        - user
+        - id
+        - newServerId
+    TeamUser:
+      type: object
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        teamId:
+          type: integer
+          format: int32
+      required:
+        - uuid
+        - teamId
+    InactiveRegion:
+      type: object
+      properties:
+        region:
+          type: integer
+          format: int32
+        lastActive:
+          type: string
+        daysSinceActive:
+          type: integer
+          format: int32
+      required:
+        - region
+        - lastActive
+        - daysSinceActive
+    SubmitSectionRequest:
+      type: object
+      properties:
+        region:
+          type: integer
+          format: int32
+        geometry_bounds:
+          type: array
+          items:
+            $ref: '#/components/schemas/Coordinate'
+          minItems: 4
+        full_review:
+          type: boolean
+        submitter:
+          type: string
+          format: uuid
+      required:
+        - region
+        - full_review
+        - submitter
+    SubmitSectionResponse:
+      type: object
+      properties:
+        submissionId:
+          type: integer
+          format: int32
+        status:
+          type: string
+          enum:
+            - REJECTED
+            - PENDING
+        reason:
+          type: string
+        full_review:
+          type: boolean
+      required:
+        - status
+    UserSubmission:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        region:
+          type: integer
+          format: int32
+        state:
+          type: string
+        last_submitted_time:
+          type: string
+        full_review:
+          type: boolean
+      required:
+        - id
+        - region
+        - state
+        - last_submitted_time
+        - full_review
+    GenericRequestResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        reason:
+          type: string
+      required:
+        - success
+    MembershipRequest:
+      type: object
+      properties:
+        region:
+          type: integer
+          format: int
+        player:
+          type: string
+        time_added:
+          type: string
+      required:
+        - region
+        - player
+        - time_added

@@ -12,6 +12,7 @@
         <module>WorldEdit</module>
         <module>Outlines</module>
         <module>Holograms</module>
+        <module>Http</module>
     </modules>
 
     <repositories>
@@ -37,12 +38,18 @@
         <java.version>21</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.version>3.13.0</maven.compiler.version>
+        <build-helper-maven-plugin.version>3.6.0</build-helper-maven-plugin.version>
 
         <adventure-api.version>4.19.0</adventure-api.version>
         <lombok.version>1.18.36</lombok.version>
         <paper.version>1.21.1-R0.1-SNAPSHOT</paper.version>
 
         <jackson.version>2.18.3</jackson.version>
+        <junit.version>5.11.0</junit.version>
+        <javax-annotation.version>1.3.2</javax-annotation.version>
+        <jsr305.version>3.0.2</jsr305.version>
+        <openapi-generator.version>7.10.0</openapi-generator.version>
+        <decentholograms.version>2.10.0</decentholograms.version>
 
         <maven.compiler.release>${java.version}</maven.compiler.release>
     </properties>
@@ -83,7 +90,7 @@
             <dependency>
                 <groupId>com.github.decentsoftware-eu</groupId>
                 <artifactId>decentholograms</artifactId>
-                <version>2.10.0</version>
+                <version>${decentholograms.version}</version>
                 <scope>provided</scope>
             </dependency>
 
@@ -99,6 +106,38 @@
                 <artifactId>jackson-databind</artifactId>
                 <version>${jackson.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>javax.annotation</groupId>
+                <artifactId>javax.annotation-api</artifactId>
+                <version>${javax-annotation.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.code.findbugs</groupId>
+                <artifactId>jsr305</artifactId>
+                <version>${jsr305.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>build-helper-maven-plugin</artifactId>
+                    <version>${build-helper-maven-plugin.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 </project>
