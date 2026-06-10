@@ -1,12 +1,19 @@
 package org.btuk.minecraft.gui;
 
+import lombok.Getter;
+import org.bukkit.entity.Player;
+
 import java.util.Map;
 
 public class GuiOpenContext {
 
+    @Getter
+    private final Player player;
+
     private final Map<String, Object> parameters;
 
-    public GuiOpenContext(Map<String, Object> parameters) {
+    public GuiOpenContext(Player player, Map<String, Object> parameters) {
+        this.player = player;
         this.parameters = parameters;
     }
 
