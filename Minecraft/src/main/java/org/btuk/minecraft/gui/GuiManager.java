@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 /**
  * {@link Gui} manager, registers en unregisters Guis as wel as keeps track of players that are currently using a Gui.
@@ -16,6 +17,8 @@ public final class GuiManager {
 
     private final Map<UUID, UUID> openGuis = new HashMap<>();
 
+    private final Map<Class<?>, Supplier<Gui>> returnGuis = new HashMap<>();
+
     /**
      * Adds the Gui to the list of registered Guis.
      * @param gui The Gui to add to the list of registered Guis.
@@ -24,6 +27,14 @@ public final class GuiManager {
         if (gui != null) {
             registeredGuis.put(gui.getUuid(), gui);
         }
+    }
+
+    public void registerReturnGui(Class<?> guiClass, Supplier<Gui> guiSupplier) {
+        returnGuis.put(guiClass, guiSupplier);
+    }
+
+    public Supplier<Gui> getReturnGui(Class<?> guiClass) {
+        return returnGuis.get(guiClass);
     }
 
     /**
