@@ -1,7 +1,8 @@
 package org.btuk.minecraft.gui;
 
-@FunctionalInterface
-public interface GuiFactory {
+public interface GuiFactory<T> {
+
+    Class<T> getGuiClass();
 
     Gui create(GuiOpenContext context);
 }
