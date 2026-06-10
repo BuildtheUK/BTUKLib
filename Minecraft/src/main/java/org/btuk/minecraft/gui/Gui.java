@@ -31,10 +31,6 @@ public abstract class Gui {
     @Setter
     private boolean deleteOnClose = false;
 
-    @Getter
-    @Setter
-    private Gui fallbackReturnGui;
-
     /**
      * Constructs a Gui from a given inventory size, and inventory title
      *
@@ -134,43 +130,6 @@ public abstract class Gui {
     public void open(Player player) {
         player.openInventory(inventory);
         manager.openGui(player, this);
-    }
-
-    /**
-     * Opens this Gui as a root Gui, clearing the player's Gui history first.
-     *
-     * @param player The player whom to open this Gui for.
-     */
-    public void openAsRoot(Player player) {
-        manager.openRootGui(player, this);
-    }
-
-    /**
-     * Opens another Gui and stores this player's current Gui as the previous Gui.
-     *
-     * @param player The player whom to open the Gui for.
-     * @param gui The Gui to open.
-     */
-    public void navigateTo(Player player, Gui gui) {
-        manager.navigateToGui(player, gui);
-    }
-
-    public boolean hasFallbackReturnGui() {
-        return fallbackReturnGui != null;
-    }
-
-    /**
-     * Returns the player to the previous Gui, or to this Gui's fallback return Gui if no history exists.
-     *
-     * @param player The player whom to return.
-     * @return true if a Gui was opened, false if no previous or fallback Gui exists.
-     */
-    public boolean returnToPreviousGui(Player player) {
-        return manager.returnToPreviousGui(player, this);
-    }
-
-    public boolean hasPreviousGui(Player player) {
-        return manager.hasPreviousGui(player);
     }
 
     public void close(Player player) {
