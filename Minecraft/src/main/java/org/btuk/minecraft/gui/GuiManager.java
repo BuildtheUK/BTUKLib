@@ -17,7 +17,7 @@ public final class GuiManager {
 
     private final Map<UUID, UUID> openGuis = new HashMap<>();
 
-    private final Map<Class<?>, GuiFactory> returnGuis = new HashMap<>();
+    private final Map<GuiType, GuiFactory> returnGuis = new HashMap<>();
 
     /**
      * Adds the Gui to the list of registered Guis.
@@ -29,12 +29,12 @@ public final class GuiManager {
         }
     }
 
-    public void registerReturnGui(Class<?> guiClass, GuiFactory guiSupplier) {
-        returnGuis.put(guiClass, guiSupplier);
+    public void registerReturnGui(GuiType guiType, GuiFactory guiSupplier) {
+        returnGuis.put(guiType, guiSupplier);
     }
 
-    public GuiFactory getReturnGui(Class<?> guiClass) {
-        return returnGuis.get(guiClass);
+    public GuiFactory getReturnGui(GuiType guiType) {
+        return returnGuis.get(guiType);
     }
 
     /**
