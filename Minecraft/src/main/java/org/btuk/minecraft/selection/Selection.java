@@ -35,6 +35,8 @@ public class Selection implements Listener {
     protected final Map<UUID, List<IntPoint2d>> activeSelections = new HashMap<>();
     protected final Map<UUID, UUID> playerOutlineIds = new HashMap<>();
 
+    protected boolean resetOnWorldChange = true;
+
     protected BiPredicate<Player, IntPoint2d> pointValidator = (p, pt) -> true;
 
     protected BiConsumer<Player, List<IntPoint2d>> selectionUpdateHook = (p, l) -> {};
@@ -61,6 +63,10 @@ public class Selection implements Listener {
 
     public void setSelectionUpdateHook(BiConsumer<Player, List<IntPoint2d>> selectionUpdateHook) {
         this.selectionUpdateHook = selectionUpdateHook;
+    }
+
+    public void setResetOnWorldChange(boolean resetOnWorldChange) {
+        this.resetOnWorldChange = resetOnWorldChange;
     }
 
     public void startSelection(Player player, List<IntPoint2d> points) {
@@ -106,7 +112,9 @@ public class Selection implements Listener {
 
     @EventHandler
     public void onWorldChange(PlayerChangedWorldEvent event) {
-        resetSelection(event.getPlayer().getUniqueId());
+        if (resetOnWorldChange) {
+            resetSelection(event.getPlayer().getUniqueId());
+        }
     }
 
     protected void addPoint(Player player, UUID playerId, PlayerInteractEvent event) {

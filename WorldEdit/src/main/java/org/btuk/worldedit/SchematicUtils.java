@@ -4,6 +4,7 @@ import com.fastasyncworldedit.core.extent.clipboard.DiskOptimizedClipboard;
 import com.fastasyncworldedit.core.extent.clipboard.io.FastSchematicReaderV3;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import com.sk89q.worldedit.extent.clipboard.io.BuiltInClipboardFormat;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardWriter;
@@ -15,6 +16,7 @@ import com.sk89q.worldedit.math.BlockVector2;
 import com.sk89q.worldedit.regions.Polygonal2DRegion;
 import com.sk89q.worldedit.session.ClipboardHolder;
 import com.sk89q.worldedit.world.World;
+import org.btuk.geography.MinecraftCoordinate;
 import lombok.extern.java.Log;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
@@ -45,14 +47,18 @@ public final class SchematicUtils {
     /**
      * Async method to create a schematic.
      *
-     * @param world  the world to create the schematic in
+     * @param bukkitWorld  the world to create the schematic in
      * @param points the bounds of the schematic
      * @param minY   the minimum Y coordinate of the schematic
      * @param maxY   the maximum Y coordinate of the schematic
      * @return the schematic in {@link BuiltInClipboardFormat#FAST_V3} format as a CompletableFuture
      */
-    public CompletableFuture<Schematic> createSchematic(World world, List<BlockVector2> points, int minY, int maxY) {
-        return CompletableFuture.supplyAsync(() -> createSchematic(BuiltInClipboardFormat.FAST_V3, world, points, minY, maxY));
+    public CompletableFuture<Schematic> createSchematic(org.bukkit.World bukkitWorld, List<MinecraftCoordinate> points, int minY, int maxY) {
+        World world = BukkitAdapter.adapt(bukkitWorld);
+        List<BlockVector2> bvPoints = points.stream()
+                .map(p -> BlockVector2.at(p.x(), p.z()))
+                .toList();
+        return CompletableFuture.supplyAsync(() -> createSchematic(BuiltInClipboardFormat.FAST_V3, world, bvPoints, minY, maxY, points));
     }
 
     /**
@@ -76,7 +82,10 @@ public final class SchematicUtils {
         Clipboard clipboard;
 
         UUID randomUUID = UUID.randomUUID();
-        Polygonal2DRegion region = new Polygonal2DRegion(world, schematic.points(), schematic.minY(), schematic.maxY());
+        List<BlockVector2> bvPoints = schematic.points().stream()
+                .map(p -> BlockVector2.at(p.x(), p.z()))
+                .toList();
+        Polygonal2DRegion region = new Polygonal2DRegion(world, bvPoints, schematic.minY(), schematic.maxY());
 
         try (InputStream inputStream = new ByteArrayInputStream(schematic.schematicData())) {
 
@@ -91,7 +100,7 @@ public final class SchematicUtils {
         int targetMinY = targetY + (minY - schematic.minY());
         int targetMaxY = targetY + (maxY - schematic.minY());
 
-        Polygonal2DRegion allowedPasteRegion = new Polygonal2DRegion(world, schematic.points(), targetMinY, targetMaxY);
+        Polygonal2DRegion allowedPasteRegion = new Polygonal2DRegion(world, bvPoints, targetMinY, targetMaxY);
 
         try (EditSession editSession = WorldEdit.getInstance().newEditSession(world)) {
             editSession.setMask(new RegionMask(allowedPasteRegion));
@@ -106,7 +115,7 @@ public final class SchematicUtils {
         return true;
     }
 
-    private Schematic createSchematic(BuiltInClipboardFormat schematicFormat, World world, List<BlockVector2> points, int minY, int maxY) {
+    private Schematic createSchematic(BuiltInClipboardFormat schematicFormat, World world, List<BlockVector2> points, int minY, int maxY, List<MinecraftCoordinate> mcPoints) {
         Schematic schematic;
 
         UUID randomUUID = UUID.randomUUID();
@@ -132,7 +141,7 @@ public final class SchematicUtils {
                 return null;
             }
 
-            schematic = new Schematic(outputStream.toByteArray(), schematicFormat, points, minY, maxY);
+            schematic = new Schematic(outputStream.toByteArray(), schematicFormat, mcPoints, minY, maxY);
         }
 
         return schematic;

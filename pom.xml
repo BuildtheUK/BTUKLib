@@ -13,6 +13,7 @@
         <module>Outlines</module>
         <module>Holograms</module>
         <module>Http</module>
+        <module>WorldGuard</module>
     </modules>
 
     <repositories>
@@ -42,7 +43,8 @@
 
         <adventure-api.version>4.19.0</adventure-api.version>
         <lombok.version>1.18.46</lombok.version>
-        <paper.version>1.21.1-R0.1-SNAPSHOT</paper.version>
+        <paper.version>[26.2.build,)</paper.version>
+        <worldguard.version>7.0.17</worldguard.version>
 
         <jackson.version>2.18.3</jackson.version>
         <junit.version>5.11.0</junit.version>
@@ -77,6 +79,13 @@
                 <groupId>net.kyori</groupId>
                 <artifactId>adventure-api</artifactId>
                 <version>${adventure-api.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.sk89q.worldguard</groupId>
+                <artifactId>worldguard-bukkit</artifactId>
+                <version>${worldguard.version}</version>
+                <scope>provided</scope>
             </dependency>
 
             <dependency>
