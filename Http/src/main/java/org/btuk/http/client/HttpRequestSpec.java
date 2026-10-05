@@ -65,6 +65,17 @@ public class HttpRequestSpec<T> {
     }
 
     /**
+     * Creates a POST request specification.
+     */
+    public static <T> HttpRequestSpec<T> post(String path, Class<T> responseType) {
+        return HttpRequestSpec.<T>builder()
+            .method("POST")
+            .path(path)
+            .responseType(responseType)
+            .build();
+    }
+
+    /**
      * Creates a POST request specification with arguments merged into a map.
      */
     public static <T> HttpRequestSpec<T> post(String path, Class<T> responseType, Map<String, Object> args) {
@@ -97,5 +108,17 @@ public class HttpRequestSpec<T> {
                 .path(path)
                 .responseType(Void.class)
                 .build();
+    }
+
+    /**
+     * Creates a DELETE request specification.
+     */
+    public static HttpRequestSpec<Void> delete(String path, Object body) {
+        return HttpRequestSpec.<Void>builder()
+            .method("DELETE")
+            .path(path)
+            .body(body)
+            .responseType(Void.class)
+            .build();
     }
 }

@@ -31,7 +31,7 @@ public class BTUKHttpClient {
     }
 
     /**
-     * Creates a new BTUKHttpClient with the specified base URL, authentication strategy, custom HttpClient and ObjectMapper.
+     * Creates a new BTUKHttpClient with the specified base URL, authentication strategy, custom HttpClient, and ObjectMapper.
      */
     public BTUKHttpClient(String baseUrl, Authentication authentication, HttpClient httpClient, ObjectMapper objectMapper) {
         this.baseUrl = baseUrl.endsWith("/") ? baseUrl.substring(0, baseUrl.length() - 1) : baseUrl;
